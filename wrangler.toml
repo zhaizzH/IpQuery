@@ -1,0 +1,8 @@
+name = "ip-query"
+main = "worker.js"
+compatibility_date = "2026-05-19"
+
+# 国内节点优化
+# routes = [
+#   { pattern = "ip.example.com", zone_id = "your-zone-id" }
+#]

@@ -1,0 +1,13 @@
+{
+  "name": "ip-query",
+  "version": "1.0.0",
+  "description": "IP 地址归属地与网络信息查询工具（Cloudflare Workers）",
+  "main": "worker.js",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy"
+  },
+  "devDependencies": {
+    "wrangler": "^4.0.0"
+  }
+}
