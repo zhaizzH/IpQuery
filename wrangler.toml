@@ -1,4 +1,4 @@
-name = "ip-query"
+name = "ipquery"
 main = "worker.js"
 compatibility_date = "2026-05-19"
 

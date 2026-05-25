@@ -2,6 +2,8 @@
 
 基于 Cloudflare Workers 的 IP 地址归属地与网络信息查询工具，支持双数据源切换。
 
+![cf-ip-query.png](https://img.zhaizz.top/file/blog-website/evwl5Dr1.png)
+
 ## 功能
 
 - **IP 归属地查询** — 国家、省份、城市、区县

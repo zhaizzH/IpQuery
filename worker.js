@@ -582,16 +582,18 @@ function renderHTML() {
       rows.push({ label: 'IP 类型', value: typeMap[data.ipType] || data.ipType, full: false });
     }
     if (data.org) rows.push({ label: '组织', value: data.org, full: false });
-    if (data.asn) rows.push({ label: 'ASN', value: data.asn, full: false });
     if (data.timezone) rows.push({ label: '时区', value: data.timezone, full: false });
-    if (data.areaCode) rows.push({ label: '区号', value: data.areaCode, full: false });
     if (data.postCode) rows.push({ label: '邮政编码', value: data.postCode, full: false });
     if (data.lat != null && data.lng != null) {
       const coord = data.lat.toFixed(4) + ', ' + data.lng.toFixed(4);
-      const mapUrl = 'https://www.google.com/maps?q=' + data.lat + ',' + data.lng;
+      const isCN = data.countryCode === 'CN';
+      const mapUrl = isCN
+        ? 'https://uri.amap.com/marker?position=' + data.lng + ',' + data.lat
+        : 'https://www.google.com/maps?q=' + data.lat + ',' + data.lng;
+      const mapLabel = '地图';
       rows.push({
         label: '坐标',
-        value: coord + ' <a href="' + mapUrl + '" target="_blank" class="map-link">查看地图 →</a>',
+        value: coord + ' <a href="' + mapUrl + '" target="_blank" class="map-link">查看' + mapLabel + ' →</a>',
         full: false,
         raw: true
       });
