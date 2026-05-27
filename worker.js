@@ -108,37 +108,109 @@ function renderHTML() {
 <link rel="icon" href="https://img.zhaizz.top/file/avatar/obVInnoY.png">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { color-scheme: light dark; }
 
+  /* ============================
+     Design Tokens — Light
+     ============================ */
   :root {
+    /* Brand */
     --primary: #0066cc;
     --primary-focus: #0071e3;
     --primary-on-dark: #2997ff;
+
+    /* Raw surfaces */
     --canvas: #ffffff;
     --canvas-parchment: #f5f5f7;
     --surface-pearl: #fafafc;
     --surface-tile-1: #272729;
     --surface-tile-2: #2a2a2c;
+    --surface-black: #000000;
+
+    /* Raw text */
     --ink: #1d1d1f;
+    --ink-muted-80: #333333;
+    --ink-muted-48: #7a7a7a;
     --body-on-dark: #ffffff;
     --body-muted: #cccccc;
-    --ink-muted-48: #7a7a7a;
+
+    /* Raw borders */
     --hairline: #e0e0e0;
     --divider-soft: #f0f0f0;
+
+    /* Semantic — light theme */
+    --link-color: #0066cc;
+    --bg-hero: #ffffff;
+    --text-hero-headline: #1d1d1f;
+    --text-hero-tagline: #6e6e73;
+    --bg-results: #f5f5f7;
+    --bg-card: #ffffff;
+    --bg-footer: #f5f5f7;
+    --chip-border: rgba(0, 0, 0, 0.10);
+    --chip-text: #1d1d1f;
+    --chip-active-border: #0071e3;
+    --input-bg: rgba(0, 0, 0, 0.04);
+    --input-border: rgba(0, 0, 0, 0.12);
+    --input-text: #1d1d1f;
+    --input-focus-border: #0066cc;
+    --spinner-track: rgba(0, 0, 0, 0.10);
+    --spinner-color: #1d1d1f;
+    --badge-bg: #fafafc;
+    --badge-border: #f0f0f0;
+    --badge-text: #7a7a7a;
+    --error-bg: rgba(255, 69, 58, 0.08);
+    --error-border: rgba(255, 69, 58, 0.20);
+  }
+
+  /* ============================
+     Design Tokens — Dark
+     ============================ */
+  [data-theme="dark"] {
+    --link-color: #2997ff;
+    --bg-hero: #1d1d1f;
+    --text-hero-headline: #f5f5f7;
+    --text-hero-tagline: #a1a1a6;
+    --bg-results: #1d1d1f;
+    --bg-card: #2a2a2c;
+    --bg-footer: #1d1d1f;
+    --chip-border: rgba(255, 255, 255, 0.20);
+    --chip-text: #f5f5f7;
+    --chip-active-border: #2997ff;
+    --input-bg: rgba(255, 255, 255, 0.10);
+    --input-border: rgba(255, 255, 255, 0.20);
+    --input-text: #f5f5f7;
+    --input-focus-border: #2997ff;
+    --spinner-track: rgba(255, 255, 255, 0.20);
+    --spinner-color: #f5f5f7;
+    --badge-bg: rgba(255, 255, 255, 0.06);
+    --badge-border: rgba(255, 255, 255, 0.12);
+    --badge-text: #a1a1a6;
+    --hairline: rgba(255, 255, 255, 0.10);
+    --divider-soft: rgba(255, 255, 255, 0.06);
+    --ink: #f5f5f7;
+    --ink-muted-80: #a1a1a6;
+    --ink-muted-48: #6e6e73;
+    --error-bg: rgba(255, 69, 58, 0.15);
+    --error-border: rgba(255, 69, 58, 0.30);
   }
 
   body {
     font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
+    background: var(--bg-hero);
+    transition: background-color 0.3s ease;
   }
 
-  /* Global Nav */
+  /* ============================
+     Global Nav
+     ============================ */
   .global-nav {
     position: sticky;
     top: 0;
     z-index: 100;
     height: 44px;
-    background: #000000;
+    background: var(--surface-black);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -146,7 +218,7 @@ function renderHTML() {
   }
   .global-nav-brand {
     font-size: 12px;
-    font-weight: 400;
+    font-weight: 600;
     letter-spacing: -0.12px;
     color: var(--body-on-dark);
     text-decoration: none;
@@ -154,7 +226,7 @@ function renderHTML() {
   .global-nav-links {
     display: flex;
     align-items: center;
-    gap: 24px;
+    gap: 20px;
   }
   .global-nav-links a {
     font-size: 12px;
@@ -164,69 +236,95 @@ function renderHTML() {
     text-decoration: none;
     transition: color 0.2s;
     cursor: pointer;
+    -webkit-tap-highlight-color: transparent;
   }
   .global-nav-links a:hover {
     color: var(--body-on-dark);
   }
 
-  /* Hero Tile (Dark) */
+  /* Theme toggle (button-dark-utility) — always #1d1d1f bg across themes */
+  .theme-toggle {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    border: none;
+    background: #1d1d1f;
+    color: #cccccc;
+    cursor: pointer;
+    transition: color 0.2s, transform 0.15s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .theme-toggle:hover { color: #ffffff; }
+  .theme-toggle:active { transform: scale(0.95); }
+  .theme-toggle:hover { color: var(--body-on-dark); }
+  .theme-toggle:active { transform: scale(0.95); }
+  .theme-toggle svg { display: block; }
+
+  /* ============================
+     Hero Tile
+     ============================ */
   .hero-tile {
-    background: var(--surface-tile-1);
-    padding: 80px 24px;
+    background: var(--bg-hero);
+    padding: 100px 24px 80px;
     text-align: center;
+    transition: background-color 0.3s ease;
   }
   .hero-tile-inner {
     max-width: 680px;
     margin: 0 auto;
   }
   .hero-headline {
-    font-size: 40px;
+    font-size: 56px;
     font-weight: 600;
-    line-height: 1.10;
-    letter-spacing: 0;
-    color: var(--body-on-dark);
+    line-height: 1.07;
+    letter-spacing: -0.28px;
+    color: var(--text-hero-headline);
     margin-bottom: 8px;
+    transition: color 0.3s ease;
   }
   .hero-tagline {
     font-size: 28px;
     font-weight: 400;
     line-height: 1.14;
     letter-spacing: 0.196px;
-    color: var(--body-muted);
-    margin-bottom: 40px;
+    color: var(--text-hero-tagline);
+    margin-bottom: 48px;
+    transition: color 0.3s ease;
   }
 
-  /* Source Selector (configurator-option-chip style) */
+  /* Source chips (configurator-option-chip) */
   .source-selector {
     display: flex;
     gap: 8px;
     justify-content: center;
     flex-wrap: wrap;
-    margin-bottom: 20px;
+    margin-bottom: 24px;
   }
   .source-chip {
     padding: 12px 16px;
     border-radius: 9999px;
-    border: 1px solid rgba(255, 255, 255, 0.16);
+    border: 1px solid var(--chip-border);
     background: transparent;
-    color: var(--body-muted);
+    color: var(--chip-text);
     font-size: 14px;
     font-weight: 400;
     letter-spacing: -0.224px;
     font-family: inherit;
     cursor: pointer;
-    transition: color 0.2s, border-color 0.2s;
+    transition: color 0.3s ease, border-color 0.3s ease;
     -webkit-tap-highlight-color: transparent;
+    user-select: none;
   }
-  .source-chip:active {
-    transform: scale(0.95);
-  }
+  .source-chip:active { transform: scale(0.95); }
   .source-chip.active {
-    border: 2px solid var(--primary-focus);
-    color: var(--body-on-dark);
+    border: 2px solid var(--chip-active-border);
+    color: var(--chip-text);
   }
 
-  /* Search Input */
+  /* Search input */
   .search-row {
     display: flex;
     gap: 12px;
@@ -239,24 +337,20 @@ function renderHTML() {
     height: 44px;
     padding: 12px 20px;
     border-radius: 9999px;
-    border: 1px solid rgba(255, 255, 255, 0.16);
-    background: rgba(255, 255, 255, 0.08);
-    color: var(--body-on-dark);
+    border: 1px solid var(--input-border);
+    background: var(--input-bg);
+    color: var(--input-text);
     font-size: 17px;
     font-weight: 400;
     letter-spacing: -0.374px;
     font-family: inherit;
     outline: none;
-    transition: border-color 0.2s;
+    transition: border-color 0.3s ease, background-color 0.3s ease, color 0.3s ease;
   }
-  .search-input::placeholder {
-    color: var(--body-muted);
-  }
-  .search-input:focus {
-    border-color: var(--primary-on-dark);
-  }
+  .search-input::placeholder { color: var(--ink-muted-48); }
+  .search-input:focus { border-color: var(--input-focus-border); }
 
-  /* Primary Button (button-primary) */
+  /* Primary button (button-primary) */
   .btn-primary {
     display: inline-flex;
     align-items: center;
@@ -271,13 +365,11 @@ function renderHTML() {
     letter-spacing: -0.374px;
     font-family: inherit;
     cursor: pointer;
-    transition: transform 0.15s;
+    transition: transform 0.15s, opacity 0.2s;
     white-space: nowrap;
     -webkit-tap-highlight-color: transparent;
   }
-  .btn-primary:active {
-    transform: scale(0.95);
-  }
+  .btn-primary:active { transform: scale(0.95); }
   .btn-primary:focus-visible {
     outline: 2px solid var(--primary-focus);
     outline-offset: 2px;
@@ -289,20 +381,20 @@ function renderHTML() {
   }
 
   /* Loading */
-  .loading { display: none; padding: 40px 0 0; }
+  .loading { display: none; padding: 48px 0 0; }
   .loading.show { display: block; }
   .spinner {
     width: 28px;
     height: 28px;
-    border: 2px solid rgba(255, 255, 255, 0.15);
-    border-top-color: var(--body-on-dark);
+    border: 2px solid var(--spinner-track);
+    border-top-color: var(--spinner-color);
     border-radius: 50%;
     animation: spin 0.8s linear infinite;
     margin: 0 auto 12px;
   }
   @keyframes spin { to { transform: rotate(360deg); } }
   .loading-text {
-    color: var(--body-muted);
+    color: var(--ink-muted-48);
     font-size: 14px;
     font-weight: 400;
     letter-spacing: -0.224px;
@@ -313,39 +405,51 @@ function renderHTML() {
     display: none;
     padding: 14px 20px;
     border-radius: 11px;
-    background: rgba(255, 69, 58, 0.12);
-    border: 1px solid rgba(255, 69, 58, 0.25);
+    background: var(--error-bg);
+    border: 1px solid var(--error-border);
     color: #ff453a;
     font-size: 14px;
     font-weight: 400;
     letter-spacing: -0.224px;
     text-align: center;
     max-width: 560px;
-    margin: 16px auto 0;
+    margin: 20px auto 0;
   }
   .error.show { display: block; }
 
-  /* Results Tile (Parchment) */
+  /* ============================
+     Results Tile
+     ============================ */
   .results-tile {
-    background: var(--canvas-parchment);
+    background: var(--bg-results);
     padding: 80px 24px;
+    transition: background-color 0.3s ease;
   }
   .results-tile-inner {
     max-width: 680px;
     margin: 0 auto;
   }
 
-  /* Result Card (store-utility-card style) */
+  /* Result card (store-utility-card) */
   .result-card {
-    background: var(--canvas);
-    border-radius: 18px;
-    padding: 32px;
+    background: var(--bg-card);
     border: 1px solid var(--hairline);
+    border-radius: 18px;
+    padding: 40px 32px 32px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    animation: fadeUp 0.4s ease both;
+  }
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(16px); }
+    to   { opacity: 1; transform: translateY(0); }
   }
 
   .ip-display {
     text-align: center;
-    padding: 8px 0 24px;
+    padding: 0 0 28px;
+    border-bottom: 1px solid var(--hairline);
+    margin-bottom: 24px;
+    transition: border-color 0.3s ease;
   }
   .ip-display .ip-label {
     font-size: 14px;
@@ -353,6 +457,7 @@ function renderHTML() {
     letter-spacing: -0.224px;
     color: var(--ink-muted-48);
     margin-bottom: 4px;
+    transition: color 0.3s ease;
   }
   .ip-display .ip-value {
     font-size: 34px;
@@ -360,11 +465,12 @@ function renderHTML() {
     line-height: 1.47;
     letter-spacing: -0.374px;
     color: var(--ink);
-    font-family: 'SF Mono', 'Fira Code', monospace;
+    font-family: 'SF Mono', 'Fira Code', 'Cascadia Code', monospace;
     word-break: break-all;
+    transition: color 0.3s ease;
   }
 
-  /* Info Grid */
+  /* Info grid */
   .info-grid {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -372,10 +478,12 @@ function renderHTML() {
     background: var(--hairline);
     border-radius: 11px;
     overflow: hidden;
+    transition: background-color 0.3s ease;
   }
   .info-item {
     padding: 16px 20px;
-    background: var(--canvas);
+    background: var(--bg-card);
+    transition: background-color 0.3s ease;
   }
   .info-item.full-width { grid-column: 1 / -1; }
   .info-item .label {
@@ -385,12 +493,14 @@ function renderHTML() {
     text-transform: uppercase;
     color: var(--ink-muted-48);
     margin-bottom: 2px;
+    transition: color 0.3s ease;
   }
   .info-item .value {
     font-size: 17px;
     font-weight: 400;
     letter-spacing: -0.374px;
     color: var(--ink);
+    transition: color 0.3s ease;
   }
   .info-item .value.null-value {
     color: var(--ink-muted-48);
@@ -407,51 +517,68 @@ function renderHTML() {
     font-size: 14px;
     font-weight: 400;
     letter-spacing: -0.224px;
-    color: var(--ink-muted-48);
-    background: var(--surface-pearl);
-    border: 1px solid var(--divider-soft);
+    color: var(--badge-text);
+    background: var(--badge-bg);
+    border: 1px solid var(--badge-border);
+    transition: background-color 0.3s ease, border-color 0.3s ease, color 0.3s ease;
   }
 
   .map-link {
-    color: var(--primary);
+    color: var(--link-color);
     text-decoration: none;
     font-size: 14px;
     margin-left: 6px;
+    transition: color 0.3s ease;
   }
   .map-link:hover { text-decoration: underline; }
 
-  /* Footer */
+  /* ============================
+     Footer
+     ============================ */
   .page-footer {
-    background: var(--canvas-parchment);
-    padding: 24px;
+    background: var(--bg-footer);
+    padding: 32px 24px;
     text-align: center;
+    transition: background-color 0.3s ease;
   }
   .page-footer p {
     font-size: 12px;
     font-weight: 400;
     letter-spacing: -0.12px;
     color: var(--ink-muted-48);
+    transition: color 0.3s ease;
   }
 
-  /* Responsive */
-  @media (max-width: 734px) {
-    .hero-tile { padding: 60px 20px; }
+  /* ============================
+     Responsive
+     ============================ */
+  @media (max-width: 834px) {
+    .hero-tile { padding: 80px 20px 60px; }
     .results-tile { padding: 60px 20px; }
+    .hero-headline { font-size: 40px; letter-spacing: 0; }
+    .hero-tagline { font-size: 24px; }
+  }
+
+  @media (max-width: 734px) {
+    .hero-tile { padding: 60px 20px 48px; }
+    .results-tile { padding: 48px 20px; }
     .hero-headline { font-size: 34px; }
     .hero-tagline { font-size: 21px; }
     .search-row { flex-direction: column; align-items: stretch; }
     .search-input { width: 100%; }
     .info-grid { grid-template-columns: 1fr; }
     .ip-display .ip-value { font-size: 28px; }
-    .result-card { padding: 24px; }
+    .result-card { padding: 28px 20px 24px; }
   }
 
   @media (max-width: 480px) {
-    .hero-tile { padding: 48px 16px; }
+    .hero-tile { padding: 48px 16px 40px; }
     .hero-headline { font-size: 28px; }
-    .hero-tagline { font-size: 18px; }
+    .hero-tagline { font-size: 18px; margin-bottom: 32px; }
     .ip-display .ip-value { font-size: 22px; }
     .result-card { padding: 20px 16px; }
+    .results-tile { padding: 40px 16px; }
+    .page-footer { padding: 24px 16px; }
   }
 </style>
 </head>
@@ -462,14 +589,20 @@ function renderHTML() {
   <a href="/" class="global-nav-brand">IP 地址查询</a>
   <div class="global-nav-links">
     <a onclick="document.getElementById('ipInput').value='';doQuery()">查询本机</a>
+    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" aria-label="切换主题">
+      <svg id="themeIcon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+        stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="12" cy="12" r="5"/>
+        <path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>
+      </svg>
+    </button>
   </div>
 </nav>
 
-<!-- Hero Tile (Dark) -->
+<!-- Hero Tile -->
 <section class="hero-tile">
   <div class="hero-tile-inner">
-    <h1 class="hero-headline">IP 地址</h1>
-    <p class="hero-tagline">查询 IP 地址的归属地与网络信息</p>
+    <h1 class="hero-headline">IP 地址查询</h1>
 
     <div class="source-selector">
       <button class="source-chip active" data-source="auto" onclick="setSource('auto')">智能选择</button>
@@ -485,14 +618,14 @@ function renderHTML() {
 
     <div class="loading" id="loading">
       <div class="spinner"></div>
-      <div class="loading-text">正在查询...</div>
+      <div class="loading-text">正在查询…</div>
     </div>
 
     <div class="error" id="error"></div>
   </div>
 </section>
 
-<!-- Results Tile (Parchment) -->
+<!-- Results Tile -->
 <section class="results-tile" id="resultsSection" style="display:none">
   <div class="results-tile-inner">
     <div class="result-card">
@@ -516,6 +649,36 @@ function renderHTML() {
 <script>
   let currentSource = 'auto';
 
+  // ============ Theme ============
+  function setTheme(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+    const icon = document.getElementById('themeIcon');
+    if (theme === 'dark') {
+      icon.innerHTML = '<path d="M21 12.79A9 9 0 1111.21 3a7 7 0 009.79 9.79z"/>';
+    } else {
+      icon.innerHTML = '<circle cx="12" cy="12" r="5"/><path d="M12 1v2M12 21v2M4.22 4.22l1.42 1.42M18.36 18.36l1.42 1.42M1 12h2M21 12h2M4.22 19.78l1.42-1.42M18.36 5.64l1.42-1.42"/>';
+    }
+  }
+
+  function toggleTheme() {
+    const current = document.documentElement.getAttribute('data-theme');
+    setTheme(current === 'dark' ? 'light' : 'dark');
+  }
+
+  // Init: localStorage > system preference > light
+  (function initTheme() {
+    const saved = localStorage.getItem('theme');
+    if (saved) {
+      setTheme(saved);
+    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+      setTheme('dark');
+    } else {
+      setTheme('light');
+    }
+  })();
+
+  // ============ IP Query ============
   function setSource(source) {
     currentSource = source;
     document.querySelectorAll('.source-chip').forEach(b => {
@@ -590,10 +753,9 @@ function renderHTML() {
       const mapUrl = isCN
         ? 'https://uri.amap.com/marker?position=' + data.lng + ',' + data.lat
         : 'https://www.google.com/maps?q=' + data.lat + ',' + data.lng;
-      const mapLabel = '地图';
       rows.push({
         label: '坐标',
-        value: coord + ' <a href="' + mapUrl + '" target="_blank" class="map-link">查看' + mapLabel + ' →</a>',
+        value: coord + ' <a href="' + mapUrl + '" target="_blank" class="map-link">查看地图 →</a>',
         full: false,
         raw: true
       });
@@ -611,9 +773,9 @@ function renderHTML() {
 
     const badge = document.getElementById('sourceBadge');
     if (source === 'ip9.com.cn') {
-      badge.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg> 数据来源: ip9.com.cn';
+      badge.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="10"/><path d="M12 6v6l4 2"/></svg>  数据来源: ip9.com.cn';
     } else {
-      badge.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg> 数据来源: ip.sb';
+      badge.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>  数据来源: ip.sb';
     }
   }
 
